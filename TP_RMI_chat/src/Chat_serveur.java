@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 /**
  * Serveur pour le chat utilisant l'API RMI
+ * 
  * @author Antoine RICHARD, Anais MANGOLD
  * 
  */
@@ -36,14 +37,14 @@ public class Chat_serveur extends UnicastRemoteObject implements
 			String nomClient = (String) listeClient.get(i);
 			// on verifie si le nom du client est deja enregistre
 			if (nomClient.equals(nomUtilisateur)) {
-				result = "Cet utilisateur est deja connecte !";
+				result = "* cet utilisateur est deja connecte *";
 				System.out.println(result);
 				return result;
 			}
 		}
 
 		listeClient.add(nomUtilisateur);
-		result = "Nouvel utilisateur connecte : " + nomUtilisateur;
+		result = "* nouvel utilisateur connecte : " + nomUtilisateur + " *";
 		System.out.println(result);
 		return result;
 	}
@@ -51,7 +52,7 @@ public class Chat_serveur extends UnicastRemoteObject implements
 	/**
 	 * Cette methode permet d'afficher la liste des utilisateurs
 	 */
-	public void afficherUsers() throws RemoteException {
+	public boolean afficherUsers() throws RemoteException {
 		System.out.println("=================================");
 		System.out.println("Voici la liste des utilisateurs :");
 		// pour chaque utilisateur dans la liste
@@ -60,6 +61,7 @@ public class Chat_serveur extends UnicastRemoteObject implements
 			System.out.println(listeClient.get(i));
 		}
 		System.out.println("=================================");
+		return true;
 	}
 
 	/**
@@ -67,7 +69,7 @@ public class Chat_serveur extends UnicastRemoteObject implements
 	 */
 	public String kickerUser(String nomUtilisateur) throws RemoteException {
 		listeClient.remove(nomUtilisateur);
-		String result = nomUtilisateur + " s'est deconnecte.";
+		String result = "* " + nomUtilisateur + " s'est deconnecte *";
 		System.out.println(result);
 		return result;
 	}
@@ -76,8 +78,9 @@ public class Chat_serveur extends UnicastRemoteObject implements
 	 * Cette methode permet d'enregistrer un message
 	 */
 	public boolean enregistreMsg(String nomUtilisateur, String message) {
-		String messageComplet = nomUtilisateur + ":" + message;
+		String messageComplet = nomUtilisateur + ": " + message;
 		listeMsg.add(messageComplet);
+		System.out.println(messageComplet);
 		return true;
 	}
 
@@ -86,12 +89,27 @@ public class Chat_serveur extends UnicastRemoteObject implements
 	 */
 	public static void main(String[] args) {
 		try {
+
 			// cree une instance de l'objet serveur
 			Chat_serveur monServeur = new Chat_serveur();
+
 			// enregistre l'objet cree aupres du serveur de nom
 			Naming.rebind("//localhost/chat", monServeur);
 			System.out.println("Le serveur de chat a ete enregistre "
 					+ "dans le serveur de nom.");
+
+			// permet de fermer le serveur
+			Scanner sc = new Scanner(System.in);
+			String commande = new String();
+			boolean fin = false;
+			do {
+				commande = sc.nextLine();
+				if (commande.startsWith("quit")) {
+					fin = true;
+					System.out.println("* server closed *");
+				}
+			} while (fin == false);
+
 		} catch (Exception e) {
 			System.err.println("Exception dans Serveur : " + e.getMessage());
 			e.printStackTrace();

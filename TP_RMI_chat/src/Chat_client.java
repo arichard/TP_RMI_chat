@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 /**
  * Classe qui implemente le client
+ * 
  * @author Antoine RICHARD, Anais MANGOLD
  * 
  */
@@ -41,16 +42,19 @@ public class Chat_client extends UnicastRemoteObject {
 					String connect = serveur.enregistreUser(nomUtilisateur);
 					System.out.println(connect);
 				} else if (commande.startsWith("who")) {
-					serveur.afficherUsers();
-				} else if (commande.startsWith("virer")) {
+					boolean result = serveur.afficherUsers();
+					if (result) {
+						System.out.println("Liste affichee");
+					}
+				} else if (commande.startsWith("kick")) {
 					String nomUtilisateur = commande.split(" ", 2)[1];
 					String virer = serveur.kickerUser(nomUtilisateur);
 					System.out.println(virer);
-				} else if (commande == "send") {
-					String nomUtilisateur = commande.split(" ", 2)[1];
+				} else if (commande.startsWith("send")) {
+					String nomUtilisateur = commande.split(" ", 3)[1];
 					String message = commande.split(" ", 3)[2];
 					serveur.enregistreMsg(nomUtilisateur, message);
-				} else if (commande == "update") {
+				} else if (commande.startsWith("update")) {
 
 				} else if (commande.startsWith("bye")) {
 					fin = true;
@@ -65,5 +69,13 @@ public class Chat_client extends UnicastRemoteObject {
 			e.printStackTrace();
 		}
 	}
+	
+	/*
+	 * Propositions pour la suite :
+	 * une classe "message" avec des attributs id, user, text ;
+	 * un attribut user pour la classe Client afin de n'avoir qu'un seul user par client
+	 * et du coup ne plus avoir à spécifier l'user lorsqu'on envoie un msg
+	 * afficher regulierement les messages en stock et pas encore affiches
+	 */
 
 }
