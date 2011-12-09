@@ -50,12 +50,14 @@ public class Chat_serveur extends UnicastRemoteObject implements
 	 * Cette methode permet d'afficher la liste des utilisateurs
 	 */
 	public void afficherUsers() throws RemoteException {
-		System.out.println("\n Voici la liste des utilisateurs :");
+		System.out.println("=================================");
+		System.out.println("Voici la liste des utilisateurs :");
 		// pour chaque utilisateur dans la liste
 		for (int i = 0; i < listeClient.size(); i++) {
 			// on affiche son nom
 			System.out.println(listeClient.get(i));
 		}
+		System.out.println("=================================");
 	}
 
 	/**
@@ -71,19 +73,9 @@ public class Chat_serveur extends UnicastRemoteObject implements
 	/**
 	 * Cette methode permet d'enregistrer les messages de la session de chat
 	 */
-	public boolean enregistreMsg() {
-
-		// on recupere les entrees clavier pour le nom d'utilisateur et le
-		// message
-		Scanner sc = new Scanner(System.in);
-		System.out.println("\n Entrez le nom du nouvel utilisateur :");
-		String nomUtilisateur = sc.nextLine();
-		// on vide la ligne
-		sc.nextLine();
-		System.out.println("\n Entrez votre message :");
-		String phrase = sc.nextLine();
-
-		listeMsg.add(phrase);
+	public boolean enregistreMsg(String nomUtilisateur, String message) {
+		String messageComplet = nomUtilisateur + ":" + message;
+		listeMsg.add(messageComplet);
 		return true;
 	}
 
