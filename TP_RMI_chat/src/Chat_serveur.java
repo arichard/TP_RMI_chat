@@ -25,26 +25,25 @@ public class Chat_serveur extends UnicastRemoteObject implements
 	/**
 	 * Cette methode permet d'enregistrer un nouvel utilisateur
 	 */
-	public boolean enregistreUser() {
-		
-		Scanner scNomUtilisateur = new Scanner(System.in);
-		System.out.println("\n Entrez le nom du nouvel utilisateur");
-		String nomUtilisateur = scNomUtilisateur.nextLine();
+	public String enregistreUser(String nomUtilisateur) {
 
+		String result = new String();
 		// on verifie si le nomUtilisteur est deja enregistre dans listeClient
 		for (int i = 0; i < listeClient.size(); i++) {
 			// on stocke l'element i de la listeClient dans nomClient
 			String nomClient = (String) listeClient.get(i);
 			// on verifie si le nom du client est deja enregistre
 			if (nomClient.equals(nomUtilisateur)) {
-				System.out.println("Cet utilisateur est deja connecte !");
-				return false;
+				result = "Cet utilisateur est deja connecte !";
+				System.out.println(result);
+				return result;
 			}
 		}
 
-		System.out.println("Nouvel utilisateur connecte : " + nomUtilisateur);
 		listeClient.add(nomUtilisateur);
-		return true;
+		result = "Nouvel utilisateur connecte : " + nomUtilisateur;
+		System.out.println(result);
+		return result;
 	}
 
 	/**
@@ -62,20 +61,28 @@ public class Chat_serveur extends UnicastRemoteObject implements
 	/**
 	 * Cette methode permet de virer un utilisateur
 	 */
-	public boolean kickerUser() throws RemoteException {
-		Scanner scNomUtilisateur = new Scanner(System.in);
-		System.out.println("\n Entrez le nom de l'utilisateur a kicker");
-		String nomUtilisateur = scNomUtilisateur.nextLine();
-		
+	public String kickerUser(String nomUtilisateur) throws RemoteException {
 		listeClient.remove(nomUtilisateur);
-		System.out.println(nomUtilisateur + " s'est deconnecte.");
-		return true;
+		String result = nomUtilisateur + " s'est deconnecte.";
+		System.out.println(result);
+		return result;
 	}
 
 	/**
 	 * Cette methode permet d'enregistrer les messages de la session de chat
 	 */
-	public boolean enregistreMsg(String nomUtilisateur, String phrase) {
+	public boolean enregistreMsg() {
+
+		// on recupere les entrees clavier pour le nom d'utilisateur et le
+		// message
+		Scanner sc = new Scanner(System.in);
+		System.out.println("\n Entrez le nom du nouvel utilisateur :");
+		String nomUtilisateur = sc.nextLine();
+		// on vide la ligne
+		sc.nextLine();
+		System.out.println("\n Entrez votre message :");
+		String phrase = sc.nextLine();
+
 		listeMsg.add(phrase);
 		return true;
 	}
@@ -86,33 +93,26 @@ public class Chat_serveur extends UnicastRemoteObject implements
 	 * se deroule normalement.
 	 * 
 	 */
-	public boolean serveurEcrit(String nomUtilisateur, String phrase) {
-
-		boolean valeurDeRetour = true;
-		System.out.println("Le client " + nomUtilisateur + " a envoye "
-				+ phrase);
-		enregistreUser();
-		enregistreMsg(nomUtilisateur, phrase);
-
-		for (int i = 0; i < listeClient.size(); ++i) {
-			String nomClient = (String) listeClient.get(i);
-
-			try {
-				String name = "//" + nomClient + "/chatclient";
-				ClientInterface ClientX = (ClientInterface) java.rmi.Naming
-						.lookup(name);
-				ClientX.notifie(nomUtilisateur, phrase);
-			}
-
-			catch (Exception e) {
-				System.err.println("Erreur: impossible de contacter "
-						+ nomClient);
-				valeurDeRetour = false;
-			}
-		}
-
-		return valeurDeRetour;
-	}
+	/*
+	 * public boolean serveurEcrit(String nomUtilisateur, String phrase) {
+	 * 
+	 * boolean valeurDeRetour = true; System.out.println("Le client " +
+	 * nomUtilisateur + " a envoye " + phrase); enregistreUser();
+	 * enregistreMsg();
+	 * 
+	 * for (int i = 0; i < listeClient.size(); ++i) { String nomClient =
+	 * (String) listeClient.get(i);
+	 * 
+	 * try { String name = "//" + nomClient + "/chatclient"; ClientInterface
+	 * ClientX = (ClientInterface) java.rmi.Naming .lookup(name);
+	 * ClientX.notifie(nomUtilisateur, phrase); }
+	 * 
+	 * catch (Exception e) {
+	 * System.err.println("Erreur: impossible de contacter " + nomClient);
+	 * valeurDeRetour = false; } }
+	 * 
+	 * return valeurDeRetour; }
+	 */
 
 	/**
 	 * Ce main permet de lancer le serveur du chat.
@@ -130,6 +130,5 @@ public class Chat_serveur extends UnicastRemoteObject implements
 			e.printStackTrace();
 		}
 	}
-
 
 }

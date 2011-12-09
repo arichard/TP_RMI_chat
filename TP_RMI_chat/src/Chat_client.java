@@ -32,22 +32,30 @@ public class Chat_client extends UnicastRemoteObject {
 					.lookup("//localhost/chat");
 
 			// on initiliase les variables
-			Scanner scCommande = new Scanner(System.in);
-			String commande = new String();
+			Scanner sc = new Scanner(System.in);
+			boolean fin = false;
 			// tant qu'on ne demande pas de quitter le client tourne
 			do {
-				// on attend l'entree clavier
-				commande = scCommande.nextLine();
+				String commande = sc.nextLine();
 				// on lance la methode adequate
-				if (commande == "connect") {
-					serveur.enregistreUser();
-				} else if (commande == "affiche") {
+				if (commande.startsWith("connect")) {
+					String nomUtilisateur = commande.split(" ", 2)[1];
+					String connect = serveur.enregistreUser(nomUtilisateur);
+					System.out.println(connect);
+				} else if (commande.startsWith("affiche")) {
 					serveur.afficherUsers();
-				} else if (commande == "virer") {
-					serveur.kickerUser();
-				}
+				} else if (commande.startsWith("virer")) {
+					String nomUtilisateur = commande.split(" ", 2)[1];
+					String virer = serveur.kickerUser(nomUtilisateur);
+					System.out.println(virer);
+				} else if (commande == "msg") {
+					// serveur.enregistreMsg(nomUtilisateur, phrase);
+				} else if (commande == "update") {
 
-			} while (commande != "quit");
+				} else if (commande.startsWith("quit")){
+					fin = true;
+				}
+			} while (fin=false);
 
 		} catch (Exception e) {
 			System.err.println("Exception dans Client : " + e.getMessage());
