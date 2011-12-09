@@ -1,8 +1,8 @@
+import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Vector;
+import java.util.Scanner;
 
 /**
  * Serveur pour le chat utilisant l'API RMI
@@ -25,27 +25,48 @@ public class Chat_serveur extends UnicastRemoteObject implements
 	/**
 	 * Cette methode permet d'enregistrer un nouvel utilisateur
 	 */
-	public boolean enregistreUser(String nomUtilisateur) {
+	public boolean enregistreUser() {
+		
+		Scanner scNomUtilisateur = new Scanner(System.in);
+		System.out.println("\n Entrez le nom du nouvel utilisateur");
+		String nomUtilisateur = scNomUtilisateur.nextLine();
 
 		// on verifie si le nomUtilisteur est deja enregistre dans listeClient
-		for (int i = 0; i < listeClient.size(); ++i) {
+		for (int i = 0; i < listeClient.size(); i++) {
 			// on stocke l'element i de la listeClient dans nomClient
 			String nomClient = (String) listeClient.get(i);
 			// on verifie si le nom du client est deja enregistre
 			if (nomClient.equals(nomUtilisateur)) {
+				System.out.println("Cet utilisateur est deja connecte !");
 				return false;
 			}
 		}
 
-		System.out.println("Un nouveau client de chat : " + nomUtilisateur);
+		System.out.println("Nouvel utilisateur connecte : " + nomUtilisateur);
 		listeClient.add(nomUtilisateur);
 		return true;
 	}
 
 	/**
-	 * Cette methode permet de retire un utilisateur
+	 * Cette methode permet d'afficher la liste des utilisateurs
 	 */
-	public boolean removeUser(String nomUtilisateur) {
+	public void afficherUsers() throws RemoteException {
+		System.out.println("\n Voici la liste des utilisateurs :");
+		// pour chaque utilisateur dans la liste
+		for (int i = 0; i < listeClient.size(); i++) {
+			// on affiche son nom
+			System.out.println(listeClient.get(i));
+		}
+	}
+
+	/**
+	 * Cette methode permet de virer un utilisateur
+	 */
+	public boolean kickerUser() throws RemoteException {
+		Scanner scNomUtilisateur = new Scanner(System.in);
+		System.out.println("\n Entrez le nom de l'utilisateur a kicker");
+		String nomUtilisateur = scNomUtilisateur.nextLine();
+		
 		listeClient.remove(nomUtilisateur);
 		System.out.println(nomUtilisateur + " s'est deconnecte.");
 		return true;
@@ -70,7 +91,7 @@ public class Chat_serveur extends UnicastRemoteObject implements
 		boolean valeurDeRetour = true;
 		System.out.println("Le client " + nomUtilisateur + " a envoye "
 				+ phrase);
-		enregistreUser(nomUtilisateur);
+		enregistreUser();
 		enregistreMsg(nomUtilisateur, phrase);
 
 		for (int i = 0; i < listeClient.size(); ++i) {
@@ -98,16 +119,17 @@ public class Chat_serveur extends UnicastRemoteObject implements
 	 */
 	public static void main(String[] args) {
 		try {
+			// cree une instance de l'objet serveur
 			Chat_serveur monServeur = new Chat_serveur();
-			java.rmi.Naming.rebind("chatserveur", monServeur);
+			// enregistre l'objet cree aupres du serveur de nom
+			Naming.rebind("//localhost/chat", monServeur);
 			System.out.println("Le serveur de chat a ete enregistre "
 					+ "dans le serveur de nom.");
-		}
-
-		catch (Exception e) {
+		} catch (Exception e) {
 			System.err.println("Exception dans Serveur : " + e.getMessage());
 			e.printStackTrace();
 		}
 	}
+
 
 }
