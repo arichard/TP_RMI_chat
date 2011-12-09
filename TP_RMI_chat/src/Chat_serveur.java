@@ -6,8 +6,7 @@ import java.util.Scanner;
 
 /**
  * Serveur pour le chat utilisant l'API RMI
- * 
- * @author Antoine
+ * @author Antoine RICHARD, Anais MANGOLD
  * 
  */
 public class Chat_serveur extends UnicastRemoteObject implements
@@ -16,6 +15,9 @@ public class Chat_serveur extends UnicastRemoteObject implements
 	protected ArrayList<String> listeClient;
 	protected ArrayList<String> listeMsg;
 
+	/**
+	 * Constructeur de la classe serveur
+	 */
 	public Chat_serveur() throws RemoteException {
 		super();
 		listeClient = new ArrayList<String>();
@@ -71,7 +73,7 @@ public class Chat_serveur extends UnicastRemoteObject implements
 	}
 
 	/**
-	 * Cette methode permet d'enregistrer les messages de la session de chat
+	 * Cette methode permet d'enregistrer un message
 	 */
 	public boolean enregistreMsg(String nomUtilisateur, String message) {
 		String messageComplet = nomUtilisateur + ":" + message;
@@ -80,34 +82,7 @@ public class Chat_serveur extends UnicastRemoteObject implements
 	}
 
 	/**
-	 * On definit cote serveur la methode de l'interface qui va permettre
-	 * d'ecrire sur l'interface le message du client. Renvoie true si l'ecriture
-	 * se deroule normalement.
-	 * 
-	 */
-	/*
-	 * public boolean serveurEcrit(String nomUtilisateur, String phrase) {
-	 * 
-	 * boolean valeurDeRetour = true; System.out.println("Le client " +
-	 * nomUtilisateur + " a envoye " + phrase); enregistreUser();
-	 * enregistreMsg();
-	 * 
-	 * for (int i = 0; i < listeClient.size(); ++i) { String nomClient =
-	 * (String) listeClient.get(i);
-	 * 
-	 * try { String name = "//" + nomClient + "/chatclient"; ClientInterface
-	 * ClientX = (ClientInterface) java.rmi.Naming .lookup(name);
-	 * ClientX.notifie(nomUtilisateur, phrase); }
-	 * 
-	 * catch (Exception e) {
-	 * System.err.println("Erreur: impossible de contacter " + nomClient);
-	 * valeurDeRetour = false; } }
-	 * 
-	 * return valeurDeRetour; }
-	 */
-
-	/**
-	 * Ce main permet de lancer le serveur du chat.
+	 * Main du serveur
 	 */
 	public static void main(String[] args) {
 		try {

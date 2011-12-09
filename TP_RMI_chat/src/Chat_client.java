@@ -2,29 +2,27 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.rmi.Naming;
+import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Scanner;
 
 /**
  * Classe qui implemente le client
+ * @author Antoine RICHARD, Anais MANGOLD
  * 
  */
 public class Chat_client extends UnicastRemoteObject {
 
-	public Chat_client() throws java.rmi.RemoteException {
+	/**
+	 * Constructeur du client
+	 */
+	protected Chat_client() throws RemoteException {
 		super();
 	}
 
-	/*
-	 * public void notifie(String nomUtilisateur, String phrase) {
-	 * System.out.println(nomUtilisateur + ":" + phrase); }
-	 * 
-	 * public void startClient() throws IOException { BufferedReader standard =
-	 * new BufferedReader(new InputStreamReader( System.in)); while (true) {
-	 * String ligne = standard.readLine(); System.out.println("Got line " +
-	 * ligne); if (ligne.equals("/quit")) { return; } } }
+	/**
+	 * Main du client
 	 */
-
 	public static void main(String[] args) {
 		try {
 			// recuperation d'un stub sur l'objet serveur.
@@ -54,13 +52,13 @@ public class Chat_client extends UnicastRemoteObject {
 					serveur.enregistreMsg(nomUtilisateur, message);
 				} else if (commande == "update") {
 
-				} else if (commande.startsWith("bye")){
+				} else if (commande.startsWith("bye")) {
 					fin = true;
 					System.out.println("* client closed *");
 				} else {
 					System.out.println("Error !");
 				}
-			} while (fin==false);
+			} while (fin == false);
 
 		} catch (Exception e) {
 			System.err.println("Exception dans Client : " + e.getMessage());
