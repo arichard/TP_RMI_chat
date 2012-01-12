@@ -13,5 +13,8 @@ public interface ServeurInterface extends java.rmi.Remote {
 
 	public boolean enregistreMsg(String nomUtilisateur, String message)
 			throws java.rmi.RemoteException;
+	
+	public String afficherMsg(int index) throws java.rmi.RemoteException;
+	public int updateIndexDernierMsg() throws java.rmi.RemoteException;
 
 }

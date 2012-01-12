@@ -15,6 +15,7 @@ public class Chat_serveur extends UnicastRemoteObject implements
 
 	protected ArrayList<String> listeClient;
 	protected ArrayList<String> listeMsg;
+	
 
 	/**
 	 * Constructeur de la classe serveur
@@ -82,6 +83,28 @@ public class Chat_serveur extends UnicastRemoteObject implements
 		listeMsg.add(messageComplet);
 		System.out.println(messageComplet);
 		return true;
+	}
+	
+	/**
+	 * Cette methode permet d'afficher la liste des messages
+	 */
+	public String afficherMsg(int index) throws RemoteException {
+		String Messages = new String();
+		Messages = Messages + "=================================\n" + "Voici la liste des derniers messages :\n";
+		// on recupere l'index du dernier message deja affiche par le client
+		// pour chaque message
+		for (int i = index; i < listeMsg.size(); i++) {
+			// on l'ajoute a ce qu'il faudra afficher cote Client
+			Messages = Messages + listeMsg.get(i) + "\n";
+		}
+		Messages = Messages + "=================================";
+		return Messages;
+	}
+	
+	public int updateIndexDernierMsg() throws RemoteException {
+		int newIndex=0;
+		newIndex = this.listeMsg.size();
+		return newIndex;
 	}
 
 	/**
