@@ -1,6 +1,3 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -14,9 +11,12 @@ import java.util.Scanner;
  */
 public class Chat_client extends UnicastRemoteObject {
 
+	// demande par Eclipse...
+	private static final long serialVersionUID = 1L;
+
+	// demande par Eclipse...
 	protected Chat_client() throws RemoteException {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -37,7 +37,7 @@ public class Chat_client extends UnicastRemoteObject {
 			String connectGuest = serveur.enregistreUser(nickname);
 			int i=1;
 			while (connectGuest.startsWith("* cet utilisateur est deja connecte *")) {
-				nickname = nickname + i;
+				nickname = "Guest" + i;
 				i++;
 				connectGuest = serveur.enregistreUser(nickname);
 			}

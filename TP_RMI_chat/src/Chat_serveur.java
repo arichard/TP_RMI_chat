@@ -13,9 +13,14 @@ import java.util.Scanner;
 public class Chat_serveur extends UnicastRemoteObject implements
 		ServeurInterface {
 
+	//demande par Eclipse...
+	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * Attributs
+	 */
 	protected ArrayList<String> listeClient;
 	protected ArrayList<String> listeMsg;
-	
 
 	/**
 	 * Constructeur de la classe serveur
